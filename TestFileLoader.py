@@ -6,6 +6,7 @@ from preprocessing.Preprocessor import Preprocessor
 #from neuralnetworks.deprecated.MLNWithoutKeras import MLNWithoutKeras
 from neuralnetworks.factory.AbstractMLNCreator import *
 from neuralnetworks.LayerFactory import LayerFactory
+from neuralnetworks.Builder import Builder
 
 
 path= 'C:/Users/Giuseppe/Downloads/sonar_csv.csv'
@@ -27,7 +28,6 @@ n_outputs = len(set([row[-1] for row in array]))
 builder=Builder()
 # create a multilayer perceptron for classification
 network_cretor= AbstractNetworkCreator().createNetworkCreator()
-
 layers= [LayerFactory.getLayer(), LayerFactory.getDenseLayer(n_inputs, 'relu'), LayerFactory.getDenseLayer(n_outputs,'softmax')]
 mln= network_cretor.createNetwork(builder,layers)
 mln.fit(array[:,:-1],array[:,-1],200)
