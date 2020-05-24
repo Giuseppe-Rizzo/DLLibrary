@@ -9,6 +9,8 @@ from neuralnetworks.LayerFactory import LayerFactory
 from neuralnetworks.Builder import Builder
 from neuralnetworks.optimizer.optimizers import *
 from neuralnetworks.lossfunctions.LossFunctions import *
+from neuralnetworks.activations.ActivationFunctions import *
+
 from datasource.DB import Dataset
 from pandas import DataFrame
 
@@ -29,9 +31,10 @@ n_outputs =  2 #len(set([row[-1] for row in dataset.getLabels()]))
 builder = Builder()
 # create a multilayer perceptron for classification
 network_creator = AbstractNetworkCreator().createNetworkCreator()
-layers = [LayerFactory.getLayer(), LayerFactory.getDenseLayer(n_inputs, 'relu'), LayerFactory.getDenseLayer(n_outputs,'softmax')]
+layers = [LayerFactory.getLayer(), LayerFactory.getDenseLayer(n_inputs, ActivationFunction.lookup(ActivationFunctionsName.fromValue(ActivationFunctionsName.relu))), LayerFactory.getDenseLayer(n_outputs,ActivationFunction.lookup(ActivationFunctionsName.fromValue(ActivationFunctionsName.softmax)))]
 optimizer = Optimizers.lookup(OptimizersName.fromValue(OptimizersName.adadelta))
-mln = network_creator.createNetwork(builder, layers, optimizer, LossFunction.lookup(LossFunctionsName.fromValue(LossFunctionsName.sparse_categorical_crossentropy)),['accuracy'])
+loss_function_lookup = LossFunction.lookup(LossFunctionsName.fromValue(LossFunctionsName.sparse_categorical_crossentropy))
+mln = network_creator.createNetwork(builder, layers, optimizer, loss_function_lookup,['accuracy'])
 mln.fit(dataset.getInstances(),label,200)
 print(label, dataset.getLabels())
 evaluation = mln.evaluate(dataset.getInstances(),dataset.getLabels())
