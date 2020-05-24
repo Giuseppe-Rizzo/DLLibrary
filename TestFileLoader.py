@@ -1,13 +1,14 @@
-# -*- coding: utf-8 
+# -*- coding: utf-8
 #from scipy.io import arff
 from neuralnetworks.LayerFactory import LayerFactory
 from datasource.FileLoader import FileLoader
-from preprocessing.Preprocessor import Preprocessor 
+from preprocessing.Preprocessor import Preprocessor
 #from neuralnetworks.deprecated.MLNWithoutKeras import MLNWithoutKeras
 from neuralnetworks.factory.AbstractMLNCreator import *
 from neuralnetworks.LayerFactory import LayerFactory
 from neuralnetworks.Builder import Builder
 from neuralnetworks.optimizer.optimizers import *
+from neuralnetworks.lossfunctions.LossFunctions import *
 from datasource.DB import Dataset
 from pandas import DataFrame
 
@@ -29,7 +30,8 @@ builder = Builder()
 # create a multilayer perceptron for classification
 network_creator = AbstractNetworkCreator().createNetworkCreator()
 layers = [LayerFactory.getLayer(), LayerFactory.getDenseLayer(n_inputs, 'relu'), LayerFactory.getDenseLayer(n_outputs,'softmax')]
-mln = network_creator.createNetwork(builder,layers,Optimizers.lookup(OptimizersName.fromValue(OptimizersName.adadelta)),'sparse_categorical_crossentropy',['accuracy'])
+optimizer = Optimizers.lookup(OptimizersName.fromValue(OptimizersName.adadelta))
+mln = network_creator.createNetwork(builder, layers, optimizer, LossFunction.lookup(LossFunctionsName.fromValue(LossFunctionsName.sparse_categorical_crossentropy)),['accuracy'])
 mln.fit(dataset.getInstances(),label,200)
 print(label, dataset.getLabels())
 evaluation = mln.evaluate(dataset.getInstances(),dataset.getLabels())
@@ -42,7 +44,6 @@ print (evaluation)
 print("End of program")
 
 
-        
-        
-        
-    
+
+
+
