@@ -25,7 +25,7 @@ class Preprocessor:
         else:
             scaler= StandardScaler()
             return (scaler.fit_transform(df))
-        
+
     def replace(self, df, old, new):
         df=df.replace(old,new)
         return df

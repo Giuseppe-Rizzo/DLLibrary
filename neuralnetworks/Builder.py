@@ -9,8 +9,23 @@ class Builder:
     def __init__(self):
         pass
     
-    def build(self, model:MLN, layer):
+    def addLayer(self, model:MLN, layer):
         model.addLayer(layer)
+        return model
+
+    def setOptimizer(self,model, optimizer):
+        model.setOptimizer(optimizer)
+        return model
+    def setLossFunction(self, model, function):
+        model.setLossFunction(function)
+        return model
+    def setMetrics(self, model, metrics):
+        model.setMetrics(metrics)
+        return model
+
+
+    def compile(self, model):
+        model.compile()
         return model
     
     def init(self):

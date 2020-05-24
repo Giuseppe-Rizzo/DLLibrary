@@ -7,32 +7,36 @@ from preprocessing.Preprocessor import Preprocessor
 from neuralnetworks.factory.AbstractMLNCreator import *
 from neuralnetworks.LayerFactory import LayerFactory
 from neuralnetworks.Builder import Builder
-
+from datasource.DB import Dataset
+from pandas import DataFrame
 
 path= 'C:/Users/Giuseppe/Downloads/sonar_csv.csv'
 scaline = 'standard' #standard
-#arff.loadarff(path)
-#print(arff)
-a = FileLoader('csv',path)
-originaldf= a.load()
-print(originaldf)
+dataset = Dataset(path)
 pp = Preprocessor()
-originaldf= pp.replace(originaldf,'M',1.0)
-originaldf= pp.replace(originaldf,'R',0.0)
-print(originaldf)
-array= originaldf.to_numpy()
-y= array[:,-1] # access to n-2 colunm
-n_inputs = len(array[0]) - 1
-print("Input", n_inputs)
-n_outputs = len(set([row[-1] for row in array]))    
-builder=Builder()
-# create a multilayer perceptron for classification
-network_cretor= AbstractNetworkCreator().createNetworkCreator()
-layers= [LayerFactory.getLayer(), LayerFactory.getDenseLayer(n_inputs, 'relu'), LayerFactory.getDenseLayer(n_outputs,'softmax')]
-mln= network_cretor.createNetwork(builder,layers)
-mln.fit(array[:,:-1],array[:,-1],200)
 
-# create an autencode for
+#label conversions
+label = pp.replace(DataFrame(dataset.getLabels()),'R',0.0)
+label = pp.replace(label,'M',1.0)
+dataset.setLabels(label)
+
+ # access to n-2 colunm
+n_inputs = len(dataset.getInstances()[0])
+#print("Input", n_inputs, dataset.getInstances()[60])
+n_outputs =  2 #len(set([row[-1] for row in dataset.getLabels()]))
+builder = Builder()
+# create a multilayer perceptron for classification
+network_creator = AbstractNetworkCreator().createNetworkCreator()
+layers = [LayerFactory.getLayer(), LayerFactory.getDenseLayer(n_inputs, 'relu'), LayerFactory.getDenseLayer(n_outputs,'softmax')]
+mln = network_creator.createNetwork(builder,layers,'adam','sparse_categorical_crossentropy',['accuracy'])
+mln.fit(dataset.getInstances(),label,200)
+
+print(label, dataset.getLabels())
+evaluation = mln.evaluate(dataset.getInstances(),dataset.getLabels())
+print (evaluation)
+
+
+#create an autencode for
 
 
 print("End of program")
