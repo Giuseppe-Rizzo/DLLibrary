@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from neuralnetworks.Builder import AbstractBuilder
 
 """
 Abstract Factory for network
@@ -12,7 +13,7 @@ class AbstractNetworkCreator:
         return NetworkCreator()
     
     @abstractmethod
-    def createNetwork(self,builder, layers, optimizer, loss, metrics):
+    def createNetwork(self,builder:AbstractBuilder, layers, optimizer, loss, metrics):
         pass
     
   
