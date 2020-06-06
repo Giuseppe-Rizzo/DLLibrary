@@ -28,6 +28,9 @@ dataset.setLabels(label)
 n_inputs = len(dataset.getInstances()[0])
 #print("Input", n_inputs, dataset.getInstances()[60])
 n_outputs =  2 #len(set([row[-1] for row in dataset.getLabels()]))
+
+X_train, X_test, Y_train, Y_test = dataset.split_training_test(0.2)
+dataset.llov()
 builder = Builder()
 # create a multilayer perceptron for classification
 network_creator = AbstractNetworkCreator().createNetworkCreator()
