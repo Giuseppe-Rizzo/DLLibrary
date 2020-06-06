@@ -9,12 +9,6 @@ from neuralnetworks.model.FeedForwardNN import MLN
 
 
 class AbstractBuilder(metaclass=ABCMeta):
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def addLayer(self, model, layer):
-        pass
 
     @abstractmethod
     def setOptimizer(self, model, optimizer):
@@ -35,14 +29,12 @@ class AbstractBuilder(metaclass=ABCMeta):
     @abstractmethod
     def init(self):
         pass
+    @abstractmethod
+    def build(self, input, output):
+        pass
 
 
 class Builder(AbstractBuilder):
-
-    def addLayer(self, model:MLN, layer):
-        model.addLayer(layer)
-        return model
-
     def setOptimizer(self,model, optimizer):
         model.setOptimizer(optimizer)
         return model
@@ -59,4 +51,7 @@ class Builder(AbstractBuilder):
         return model
     
     def init(self):
-        return MLN()
+        pass
+
+    def build(self, input, output):
+        return MLN(input, output)

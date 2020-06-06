@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from neuralnetworks.Builder import AbstractBuilder
-
+import tensorflow as tf
 """
 Abstract Factory for network
 """
@@ -13,7 +13,7 @@ class AbstractNetworkCreator:
         return NetworkCreator()
     
     @abstractmethod
-    def createNetwork(self,builder:AbstractBuilder, layers, optimizer, loss, metrics):
+    def createNetwork(self,builder:AbstractBuilder, layers,input,output, optimizer, loss, metrics):
         pass
     
   
@@ -25,11 +25,17 @@ class NetworkCreator(AbstractNetworkCreator):
      def __init__(self):
          pass
      
-     def createNetwork(self,builder, layers:list, optimizer, loss, metrics): #SequentialMLN
+     def createNetwork(self,builder, layers:list,input, output, optimizer, loss, metrics): #SequentialMLN
          #network= MLN()
-         network= builder.init()
+
+         l = None
+         #functional approach to feedforward implementation of a network
          for layer in layers:
-             network= builder.addLayer(network,layer)
+             if l is None:
+                l = layer
+             else:
+                 l = layer(l)
+         network= builder.build(input,l)
          network = builder.setOptimizer(network, optimizer)
          network =builder.setLossFunction(network,loss)
          network= builder.setMetrics(network, metrics)

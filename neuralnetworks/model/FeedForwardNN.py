@@ -4,12 +4,10 @@ from pandas import DataFrame
 
 
 class AbstractNetwork(metaclass=ABCMeta):
-    def __init__(self):
-        self.__model__ = tf.keras.models.Sequential()
-
     @abstractmethod
-    def addLayer(self, l):
+    def __init__(self, input, output):
         pass
+
 
     @abstractmethod
     def setOptimizer(self, opt):
@@ -38,8 +36,9 @@ class AbstractNetwork(metaclass=ABCMeta):
 
 class MLN(AbstractNetwork):
 
-    def addLayer(self,l):
-         self.__model__.add(l)
+    def __init__(self, input,output):
+        self.__model__ = tf.keras.models.Model(input,output)
+
 
     def setOptimizer(self,opt):
         self.__optimizer__ = opt # e.g. adam
